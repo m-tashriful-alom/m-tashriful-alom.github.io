@@ -1,0 +1,36 @@
+# M Tashriful Alom
+> High School Student & Developer based in Milan, Italy. Specialized in AI, Computer Science, and Social Innovation.
+
+## Summary
+M Tashriful Alom is a student at IIS Giovanni Giorgi, Milan (Class of 2028), pursuing a diploma in Computer Science and Telecommunications. He is recognized for his protoype called Voce Civica for the Make It Real Contest organized by Fondazione Mondo Digitale and Amazon Italia.
+
+## Featured Project: Voce Civica
+- **Concept:** An AI-powered prototype for citizens to report urban decay.
+- **Affiliations:** Developed for the "Make It Real" contest by Amazon and Fondazione Mondo Digitale.
+- **Recognition:** Named one of the best nationwide projects in Italy; presented at Amazon (Novara) and selected for the RomeCup 2026 National Finals.
+
+## Key Achievements & Awards
+- **RomeCup 2026 National Finalist:** Selected for the "Make It Real" innovation category.
+- **Bocconi Mathematical Games 2026:** Semifinalist (Category L1) in the International Mathematical Games Championships at Bocconi University.
+- **Erasmus+ Alumnus:** Participated in the Youth Exchange for Intercultural Entrepreneurship (Chianciano Terme, 2025).
+
+## Technical Skills & Certifications
+- **Core Competencies:** Python, AI Development, Ethical Hacking, Systems & Networks, Web Development (UX Focus).
+- **Certifications:** - Ethical Hacker (Cisco Networking Academy - 70 hours)
+  - AI on Edge Systems / Jetson Nano (NVIDIA)
+  - Python AI Developer (Mimo.org)
+  - Rocket Science for Everyone (Yale University via Coursera)
+
+## Experience
+- **Volunteer Work:** 50+ hours as a Volunteer Cashier at IBVA Solidando (Social Market in Milan), supporting families in need.
+- **Freelance Web Development:** Professional freelance history on Fiverr (2023–2024) serving international clients.
+
+## Languages
+- Bengali (Native)
+- English (B2 - Upper Intermediate)
+- Italian (B1 - Intermediate)
+
+## Official Links
+- Personal Site: https://m-tashriful-alom.github.io/
+- LinkedIn: https://www.linkedin.com/in/m-tashriful-alom/
+- Institutional Feature: https://www.mondodigitale.org/en/news/inside-innovation-day-amazon
