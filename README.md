@@ -1,4 +1,4 @@
-# M. Tashriful Alom
+# M Tashriful Alom
 **High School Student | AI & Web Developer | Milan, Italy**
 
 This is the repository for my personal portfolio and CV. 
