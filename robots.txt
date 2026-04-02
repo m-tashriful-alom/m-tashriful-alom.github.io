@@ -1,0 +1,8 @@
+# Robots.txt for M Tashriful Alom (m-tashriful-alom.github.io)
+# Updated: 2026-04-02
+
+User-agent: *
+Allow: /
+
+Contact: https://m-tashriful-alom.github.io/llms.txt
+Sitemap: https://m-tashriful-alom.github.io/sitemap.xml
