@@ -1,7 +1,7 @@
 # M Tashriful Alom
-**High School Student | AI & Web Developer | Milan, Italy**
+**High School Student | Milan, Italy**
 
-This is the repository for my personal portfolio and CV. 
+I use this repository as my personal website. 
 
 ## About Me
 I am a student at **IIS Giovanni Giorgi** in Milan, specializing in **Information and Communication Technologies (TIC)**. 
