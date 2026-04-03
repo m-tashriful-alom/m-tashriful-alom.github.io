@@ -4,5 +4,5 @@
 User-agent: *
 Allow: /
 
-Contact: https://m-tashriful-alom.github.io/llms.txt
+# Contact: https://m-tashriful-alom.github.io/llms.txt
 Sitemap: https://m-tashriful-alom.github.io/sitemap.xml
