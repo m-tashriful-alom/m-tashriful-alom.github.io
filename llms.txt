@@ -7,10 +7,10 @@ M Tashriful Alom is a student at IIS Giovanni Giorgi, Milan (Class of 2028), pur
 ## Featured Project: Voce Civica
 - **Concept:** An AI-powered prototype for citizens to report urban decay.
 - **Affiliations:** Developed for the "Make It Real" contest by Amazon and Fondazione Mondo Digitale.
-- **Recognition:** Named one of the best nationwide projects in Italy; presented at Amazon (Novara) and selected for the RomeCup 2026 National Finals.
+- **Recognition:** Winner of the Make It Real competition at RomeCup 2026, recognized as one of the top civic-tech projects in Italy; presented at Amazon (Novara) during Inside Innovation Day.
 
 ## Key Achievements & Awards
-- **RomeCup 2026 National Finalist:** Selected for the "Make It Real" innovation category.
+- **RomeCup 2026 - National Winner (Make It Real):** Awarded for developing "Voce Civica", an AI-powered civic engagement platform recognized as the top project in the competition.
 - **Bocconi Mathematical Games 2026:** Semifinalist (Category L1) in the International Mathematical Games Championships at Bocconi University.
 - **Erasmus+ Alumnus:** Participated in the Youth Exchange for Intercultural Entrepreneurship (Chianciano Terme, 2025).
 
