@@ -7,9 +7,9 @@ I use this repository as my personal website.
 I am a student at **IIS Giovanni Giorgi** in Milan, specializing in **Information and Communication Technologies (TIC)**. 
 
 ## Key Achievements
-* **RomeCup 2026 Finalist:** Developer of the "Voce Civica" AI prototype, selected as one of the best nationwide projects in the Amazon & Fondazione Mondo Digitale "Make It Real" contest.
+* **RomeCup 2026 National Winner**: Creator of **Voce Civica**, awarded best project in the Make It Real contest by Amazon & Fondazione Mondo Digitale.
 * **Bocconi Mathematical Games 2026:** Semifinalist (Category L1) at Bocconi University, Milan.
-* **Certified Ethical Hacker:** Professional certification from Cisco Networking Academy (70-hour program).
+* **Certified Ethical Hacker:** Professional certification from Cisco Networking Academy.
 
 ## Connect with Me
 * **Portfolio:** [https://m-tashriful-alom.github.io](https://m-tashriful-alom.github.io)
