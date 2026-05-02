@@ -1,5 +1,5 @@
 # Robots.txt for M Tashriful Alom (m-tashriful-alom.github.io)
-# Updated: 2026-04-02
+# Updated: 2026-05-02
 
 User-agent: *
 Allow: /
