@@ -8,7 +8,6 @@ I am a student at **IIS Giovanni Giorgi** in Milan, specializing in **Informatio
 
 ## Key Achievements
 * **RomeCup 2026 National Winner**: Creator of **Voce Civica**, awarded best project in the Make It Real contest by Amazon & Fondazione Mondo Digitale.
-* **Bocconi Mathematical Games 2026:** Semifinalist (Category L1) at Bocconi University, Milan.
 * **Certified Ethical Hacker:** Professional certification from Cisco Networking Academy.
 
 ## Connect with Me
