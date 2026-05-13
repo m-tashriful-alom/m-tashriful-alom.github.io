@@ -7,113 +7,831 @@
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
     <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-    <meta name="description" content="How Voce Civica, a national winner at RomeCup 2026, uses AI and AWS to bridge the gap between citizens and local governments.">
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
-    
+    <meta name="description" content="How Voce Civica, a national winner at RomeCup 2026, uses AI and AWS to bridge the gap between citizens and local governments. A Make It Real project by M Tashriful Alom.">
+    <meta name="author" content="M Tashriful Alom">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Voce Civica: Giving Citizens a Voice Through AI | RomeCup 2026 Winner">
+    <meta property="og:description" content="Case study of Voce Civica, national winner at RomeCup 2026 — an AI civic-tech platform by M Tashriful Alom built with Amazon and Fondazione Mondo Digitale.">
+    <meta property="og:url" content="https://m-tashriful-alom.github.io/voce-civica-make-it-real-romecup-2026.html">
+    <meta property="og:image" content="https://m-tashriful-alom.github.io/romecup.jpeg">
+    <meta property="og:image:alt" content="M Tashriful Alom and team celebrating as RomeCup 2026 national winners in front of the RaiNews banner">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.7; color: #333; max-width: 900px; margin: 0 auto; padding: 40px 20px; background-color: #f8f9fa; }
-        header { text-align: center; margin-bottom: 50px; }
-        h1 { color: #2c3e50; font-size: 2.5em; margin-bottom: 10px; }
-        .meta { color: #7f8c8d; font-style: italic; margin-bottom: 30px; }
-        .featured-image-placeholder { background: #2c3e50; color: white; padding: 60px; text-align: center; border-radius: 12px; margin-bottom: 40px; }
-        h2 { color: #2980b9; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-top: 40px; }
-        h3 { color: #2c3e50; margin-top: 25px; }
-        p { margin-bottom: 20px; }
-        .highlight-box { background: #e1f5fe; border-left: 5px solid #2980b9; padding: 20px; border-radius: 4px; margin: 30px 0; }
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 30px 0; }
-        .stat-card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); text-align: center; }
-        .stat-card strong { display: block; font-size: 1.5em; color: #2980b9; }
-        .back-link { display: inline-block; margin-bottom: 20px; color: #2980b9; text-decoration: none; font-weight: bold; }
-        .back-link:hover { text-decoration: underline; }
-        footer { margin-top: 60px; padding-top: 20px; border-top: 1px solid #ddd; text-align: center; color: #7f8c8d; }
-        img { max-width: 100%; border-radius: 8px; }
+        :root {
+            --bg: #0d0f14;
+            --surface: #13161e;
+            --surface-2: #1a1e28;
+            --border: rgba(255,255,255,0.07);
+            --text: #e8e6e1;
+            --text-muted: #8a8f9e;
+            --accent: #c8a96e;
+            --accent-2: #5b8aff;
+            --accent-glow: rgba(200, 169, 110, 0.15);
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 999;
+            opacity: 0.4;
+        }
+
+        .glow-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.25;
+        }
+        .glow-orb-1 { width: 500px; height: 500px; background: var(--accent); top: -200px; right: -150px; animation: drift 12s ease-in-out infinite alternate; }
+        .glow-orb-2 { width: 400px; height: 400px; background: var(--accent-2); bottom: 10%; left: -150px; animation: drift 16s ease-in-out infinite alternate-reverse; }
+        @keyframes drift { from { transform: translate(0,0); } to { transform: translate(30px, 40px); } }
+
+        /* ── NAV ── */
+        nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            padding: 0 24px;
+            height: 58px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            backdrop-filter: blur(0px);
+            -webkit-backdrop-filter: blur(0px);
+            background: transparent;
+            border-bottom: 1px solid transparent;
+            transition: background 0.4s ease, border-color 0.4s ease, backdrop-filter 0.4s ease;
+        }
+        nav.scrolled {
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            background: rgba(13,15,20,0.92);
+            border-bottom: 1px solid var(--border);
+        }
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            flex-shrink: 0;
+            transition: opacity 0.2s;
+        }
+        .nav-logo:hover { opacity: 0.75; }
+        .nav-logo-img { height: 28px; width: auto; display: block; }
+        .nav-links { display: flex; gap: 4px; }
+        nav a.nav-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.82rem;
+            font-weight: 500;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            padding: 6px 14px;
+            border-radius: 20px;
+            transition: color 0.2s, background 0.2s;
+        }
+        nav a.nav-link:hover { color: var(--text); background: var(--surface-2); }
+
+        /* ── HAMBURGER ── */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            gap: 5px;
+            width: 36px; height: 36px;
+            background: none; border: none;
+            cursor: pointer; padding: 4px;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+        .hamburger:hover { background: var(--surface-2); }
+        .hamburger span {
+            display: block; height: 2px; border-radius: 2px;
+            background: var(--text-muted);
+            transition: transform 0.3s, opacity 0.3s, width 0.3s;
+        }
+        .hamburger span:nth-child(3) { width: 65%; }
+        .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        .hamburger.open span:nth-child(2) { opacity: 0; }
+        .hamburger.open span:nth-child(3) { width: 100%; transform: translateY(-7px) rotate(-45deg); }
+
+        .nav-drawer {
+            display: none;
+            position: fixed;
+            top: 58px; left: 0; right: 0;
+            background: rgba(13,15,20,0.97);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            z-index: 99;
+            padding: 12px 16px 20px;
+            flex-direction: column; gap: 4px;
+            transform: translateY(-8px); opacity: 0;
+            transition: transform 0.25s ease, opacity 0.25s ease;
+        }
+        .nav-drawer.open { transform: translateY(0); opacity: 1; }
+        .nav-drawer a {
+            color: var(--text-muted); text-decoration: none;
+            font-size: 0.9rem; font-weight: 500;
+            letter-spacing: 0.06em; text-transform: uppercase;
+            padding: 12px 16px; border-radius: 10px;
+            transition: color 0.2s, background 0.2s;
+        }
+        .nav-drawer a:hover { color: var(--text); background: var(--surface-2); }
+
+        @media (max-width: 640px) {
+            .nav-links { display: none; }
+            .hamburger { display: flex; }
+            .nav-drawer { display: flex; }
+        }
+
+        /* ── LAYOUT ── */
+        .container {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ── SCROLLBAR ── */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--surface-2); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #2a2e3a; }
+
+        /* ── SCROLL ANIMATIONS ── */
+        .reveal {
+            opacity: 0; transform: translateY(24px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+
+        /* ── HERO ── */
+        .article-hero {
+            padding-top: 130px;
+            padding-bottom: 64px;
+        }
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.82rem;
+            font-weight: 500;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            margin-bottom: 40px;
+            transition: color 0.2s;
+        }
+        .back-link:hover { color: var(--accent); }
+        .back-link::before { content: '←'; }
+
+        .article-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.78rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--accent);
+            font-weight: 500;
+            margin-bottom: 20px;
+        }
+        .article-eyebrow::before {
+            content: '';
+            display: inline-block;
+            width: 24px; height: 1px;
+            background: var(--accent);
+        }
+        .article-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: clamp(2.2rem, 6vw, 3.8rem);
+            line-height: 1.08;
+            color: var(--text);
+            margin-bottom: 20px;
+        }
+        .article-title em { font-style: italic; color: var(--accent); }
+        .article-meta {
+            font-size: 0.83rem;
+            color: var(--text-muted);
+            margin-bottom: 40px;
+        }
+        .article-meta span { margin-right: 20px; }
+
+        /* ── AWARD BANNER ── */
+        .award-banner {
+            background: linear-gradient(135deg, #1a1a0f 0%, var(--surface) 100%);
+            border: 1px solid rgba(200,169,110,0.3);
+            border-radius: 16px;
+            padding: 36px 40px;
+            display: flex;
+            align-items: center;
+            gap: 28px;
+            margin-bottom: 64px;
+            position: relative;
+            overflow: hidden;
+        }
+        .award-banner::before {
+            content: '';
+            position: absolute;
+            top: -1px; left: 40px;
+            width: 80px; height: 3px;
+            background: var(--accent);
+            border-radius: 0 0 4px 4px;
+        }
+        .award-trophy {
+            font-size: 3rem;
+            flex-shrink: 0;
+            line-height: 1;
+        }
+        .award-text h3 {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.2rem;
+            color: var(--accent);
+            margin-bottom: 4px;
+        }
+        .award-text p {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        /* ── ARTICLE BODY ── */
+        .article-body { border-top: 1px solid var(--border); padding-top: 64px; }
+
+        .section-label {
+            font-size: 0.72rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .section-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: clamp(1.5rem, 3.5vw, 2rem);
+            color: var(--text);
+            margin-bottom: 24px;
+            line-height: 1.2;
+        }
+
+        .prose p {
+            color: var(--text-muted);
+            font-size: 0.97rem;
+            line-height: 1.8;
+            margin-bottom: 18px;
+        }
+        .prose p strong { color: var(--text); font-weight: 600; }
+        .prose a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(200,169,110,0.3); transition: border-color 0.2s; }
+        .prose a:hover { border-color: var(--accent); }
+
+        /* ── PULL QUOTE ── */
+        .pull-quote {
+            border-left: 3px solid var(--accent);
+            padding: 20px 28px;
+            margin: 40px 0;
+            background: var(--surface);
+            border-radius: 0 12px 12px 0;
+        }
+        .pull-quote p {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.15rem;
+            font-style: italic;
+            color: var(--text);
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        /* ── PHOTOS ── */
+        .article-photo {
+            width: 100%;
+            border-radius: 14px;
+            overflow: hidden;
+            margin-top: 36px;
+            position: relative;
+            border: 1px solid var(--border);
+        }
+        .article-photo img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 0.6s ease;
+        }
+        .article-photo:hover img { transform: scale(1.02); }
+        .article-photo figcaption {
+            padding: 14px 20px;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .article-photo figcaption::before {
+            content: '↑';
+            color: var(--accent);
+            font-size: 0.7rem;
+        }
+
+        /* ── ARTICLE SECTIONS ── */
+        .article-section {
+            padding: 48px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        .article-section:last-of-type { border-bottom: none; }
+
+        /* ── TECH STACK ── */
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 14px;
+            margin-top: 28px;
+        }
+        .tech-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            transition: border-color 0.3s, transform 0.3s;
+        }
+        .tech-card:hover { border-color: rgba(200,169,110,0.3); transform: translateY(-3px); }
+        .tech-card-icon { font-size: 1.4rem; margin-bottom: 10px; }
+        .tech-card-name {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 4px;
+        }
+        .tech-card-desc { font-size: 0.8rem; color: var(--text-muted); line-height: 1.5; }
+
+        /* ── AWS SUB-ITEMS ── */
+        .aws-list {
+            list-style: none;
+            padding: 0;
+            margin-top: 20px;
+            display: grid;
+            gap: 10px;
+        }
+        .aws-list li {
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 14px 18px;
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+        .aws-list li::before {
+            content: '▸';
+            color: var(--accent);
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+        .aws-list li strong { color: var(--text); }
+
+        /* ── IMPACT CARDS ── */
+        .impact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 28px;
+        }
+        .impact-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 28px 24px;
+            transition: border-color 0.3s, transform 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        .impact-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, var(--accent-glow), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .impact-card:hover { border-color: rgba(200,169,110,0.3); transform: translateY(-4px); }
+        .impact-card:hover::before { opacity: 1; }
+        .impact-card-icon { font-size: 1.8rem; margin-bottom: 12px; position: relative; }
+        .impact-card-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.1rem;
+            color: var(--text);
+            margin-bottom: 8px;
+            position: relative;
+        }
+        .impact-card-desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; position: relative; }
+
+        /* ── ROADMAP ── */
+        .roadmap {
+            margin-top: 28px;
+            position: relative;
+            padding-left: 28px;
+        }
+        .roadmap::before {
+            content: '';
+            position: absolute;
+            left: 9px; top: 8px; bottom: 8px;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--accent), transparent);
+        }
+        .roadmap-item {
+            position: relative;
+            margin-bottom: 24px;
+            opacity: 0;
+            transform: translateX(-10px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .roadmap-item.visible { opacity: 1; transform: translateX(0); }
+        .roadmap-item::before {
+            content: '';
+            position: absolute;
+            left: -22px; top: 7px;
+            width: 10px; height: 10px;
+            border-radius: 50%;
+            background: var(--accent);
+            border: 2px solid var(--bg);
+            box-shadow: 0 0 0 2px var(--accent);
+        }
+        .roadmap-phase {
+            font-size: 0.72rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+        .roadmap-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 4px;
+        }
+        .roadmap-desc { font-size: 0.85rem; color: var(--text-muted); }
+
+        /* ── PRESS ── */
+        .press-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 28px;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            text-decoration: none;
+            transition: border-color 0.3s, transform 0.3s;
+            margin-top: 20px;
+        }
+        .press-card:hover { border-color: rgba(200,169,110,0.3); transform: translateY(-3px); }
+        .press-icon { font-size: 2rem; flex-shrink: 0; }
+        .press-source { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); font-weight: 600; margin-bottom: 4px; }
+        .press-headline { font-size: 0.95rem; font-weight: 500; color: var(--text); }
+        .press-arrow { margin-left: auto; color: var(--text-muted); font-size: 1.2rem; flex-shrink: 0; transition: transform 0.2s; }
+        .press-card:hover .press-arrow { transform: translateX(4px); color: var(--accent); }
+
+        /* ── FOOTER ── */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 48px 0;
+            text-align: center;
+        }
+        .footer-name {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.5rem;
+            color: var(--text);
+            margin-bottom: 8px;
+        }
+        .footer-tagline { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 28px; }
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+        }
+        .footer-links a { color: var(--text-muted); text-decoration: none; font-size: 0.82rem; transition: color 0.2s; }
+        .footer-links a:hover { color: var(--accent); }
+        .copyright { font-size: 0.75rem; color: #7a808f; }
+
+        @media (max-width: 600px) {
+            .award-banner { flex-direction: column; text-align: center; padding: 28px 24px; }
+            .impact-grid { grid-template-columns: 1fr; }
+            .tech-grid { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
 
-    <a href="index.html" class="back-link">← Home</a>
+<div class="glow-orb glow-orb-1" aria-hidden="true"></div>
+<div class="glow-orb glow-orb-2" aria-hidden="true"></div>
 
-    <header>
-        <h1>Voce Civica: Giving Citizens a Voice Through AI</h1>
-        <p class="meta">By M Tashriful Alom • May 2026 • Project Case Study</p>
-    </header>
-
-    <div class="featured-image-placeholder">
-        <h2>RomeCup 2026 National Winner</h2>
-        <p>A "Make It Real" Innovation Project by Amazon & Fondazione Mondo Digitale</p>
+<!-- Navigation — links go to index.html sections -->
+<nav role="navigation" aria-label="Main navigation">
+    <a href="index.html#about" class="nav-logo" aria-label="Home">
+        <img src="logo-placeholder.png" alt="Tashrif" class="nav-logo-img">
+    </a>
+    <div class="nav-links">
+        <a href="index.html#about" class="nav-link">About</a>
+        <a href="index.html#projects" class="nav-link">Projects</a>
+        <a href="index.html#experience" class="nav-link">Experience</a>
+        <a href="index.html#education" class="nav-link">Education</a>
+        <a href="index.html#certifications" class="nav-link">Certifications</a>
     </div>
+    <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+    </button>
+</nav>
 
-    <section id="introduction">
-        <p>Being an active citizen shouldn't be difficult. Yet, for many living in cities like Milan, reporting a broken streetlamp or hazardous waste in a park feels like an uphill battle. Websites are hidden, forms are overwhelming, and reports often disappear into a "black hole" without updates.</p>
-        
-        <p>This is why my team and I developed <strong>Voce Civica</strong>. Born from the <em>Make It Real</em> contest, Voce Civica is a civic-tech platform designed to simplify communication between citizens and their local municipalities (Comuni) using cutting-edge AI.</p>
-    </section>
+<div class="nav-drawer" id="navDrawer" aria-hidden="true">
+    <a href="index.html#about" class="drawer-link">About</a>
+    <a href="index.html#projects" class="drawer-link">Projects</a>
+    <a href="index.html#experience" class="drawer-link">Experience</a>
+    <a href="index.html#education" class="drawer-link">Education</a>
+    <a href="index.html#certifications" class="drawer-link">Certifications</a>
+</div>
 
-    <div class="highlight-box">
-        "Voce Civica is not just an app; it is a digital bridge. We wanted to ensure that being an active citizen is no longer a privilege for the tech-savvy, but a right accessible to everyone."
-    </div>
+<!-- Article hero -->
+<div class="container">
+    <div class="article-hero">
+        <p class="article-eyebrow">Project Case Study · May 2026</p>
+        <h1 class="article-title">Voce Civica:<br><em>Giving Citizens a Voice</em><br>Through AI</h1>
+        <p class="article-meta">
+            <span>By M Tashriful Alom</span>
+            <span>Make It Real · Amazon × Fondazione Mondo Digitale</span>
+        </p>
 
-    <section id="the-journey">
-        <h2>From Milan to the National Final</h2>
-        <p>Our journey began with a simple observation: we noticed broken glass in the parks of Milan—a danger to children and pets. When we tried to report it, we realized even "tech-folks" like us found the official process overwhelming and non-inclusive.</p>
-        
-        <p>We took this problem to the <a href="https://www.mondodigitale.org/progetti/make-it-real" target="_blank">Make It Real</a> initiative, organized by <strong>Fondazione Mondo Digitale</strong> and <strong>Amazon</strong>. After refining our prototype, we were invited to the <a href="https://www.mondodigitale.org/en/news/inside-innovation-day-amazon" target="_blank">Amazon Innovation Day in Novara</a>, where our project was recognized as the best among teams from Lombardy and Piedmont.</p>
-        
-        <p>The climax of this journey was <strong>RomeCup 2026</strong> at Sapienza University of Rome, where Voce Civica was celebrated as a national winner for its impact and technical feasibility.</p>
-    </section>
-
-    <section id="innovation">
-        <h2>Technical Architecture & Innovation</h2>
-        <p>To ensure high performance and sustainability, we built Voce Civica on a modern, serverless stack:</p>
-        <ul>
-            <li><strong>Frontend:</strong> FlutterFlow for a seamless cross-platform experience (iOS, Android, Web).</li>
-            <li><strong>Backend:</strong> Python for robust AI integration and PA (Public Administration) system connectivity.</li>
-            <li><strong>AI Core:</strong> We utilized <strong>RAG (Retrieval-Augmented Generation)</strong> to ensure our AI assistant provides accurate, municipality-specific information.</li>
-            <li><strong>AWS Ecosystem:</strong> 
-                <ul>
-                    <li><em>Amazon OpenSearch:</em> For vector-based clustering to prevent duplicate reports.</li>
-                    <li><em>Amazon Transcribe & Translate:</em> Making the app inclusive through voice-to-text and multi-language support.</li>
-                    <li><em>AWS Sovereign Cloud:</em> Ensuring GDPR compliance and data privacy.</li>
-                </ul>
-            </li>
-        </ul>
-    </section>
-
-    <section id="impact">
-        <h2>Social Impact: A Safer, More Livable City</h2>
-        <div class="stats-grid">
-            <div class="stat-card">
-                <strong>Inclusivity</strong>
-                Multilingual & Vocal services for all residents.
-            </div>
-            <div class="stat-card">
-                <strong>Efficiency</strong>
-                AI-driven urgency scoring for municipalities.
+        <div class="award-banner reveal">
+            <div class="award-trophy">🏆</div>
+            <div class="award-text">
+                <h3>National Winner — RomeCup 2026</h3>
+                <p>Celebrated as one of Italy's best innovative student projects at Sapienza University of Rome. Also presented at Amazon Innovation Day, Novara.</p>
             </div>
         </div>
-        <p>For the citizens, Voce Civica offers transparency and ease of use. For the municipalities, it reduces the administrative workload by automatically clustering similar reports and prioritizing urgent safety hazards.</p>
-    </section>
+    </div>
+</div>
 
-    <section id="roadmap">
-        <h2>The Road Ahead</h2>
-        <p>Launching a project within the Italian Public Administration requires a concrete strategy. Our 5-phase roadmap includes:</p>
-        <ol>
-            <li>Alignment with <strong>Designers Italia</strong> and <strong>PNRR 1.4.1</strong> standards.</li>
-            <li>Testing in the <strong>AgID Sandbox</strong>.</li>
-            <li>Partnering with "in-house" entities like <strong>ARIA</strong> or <strong>Cefriel</strong>.</li>
-            <li>Pilot testing through <strong>Sperimentazione Italia</strong>.</li>
-            <li>National scaling via <strong>MePA</strong> and the reuse model.</li>
-        </ol>
-    </section>
+<!-- Article body -->
+<div class="container">
+    <div class="article-body">
 
-    <section id="press">
-        <h2>In the Press</h2>
-        <p>You can read more about the national final and our victory at RomeCup 2026 on <a href="https://www.rainews.it/maratona/2026/04/intelligenza-artificiale-robotica-e-scienze-umane-alla-romecup-edizione-2026--854d936e-a4ec-4199-b962-7055b118528f.html" target="_blank">RaiNews</a>.</p>
-    </section>
+        <!-- Introduction -->
+        <div class="article-section reveal">
+            <p class="section-label">The Problem</p>
+            <h2 class="section-title">Active citizenship shouldn't be this hard</h2>
+            <div class="prose">
+                <p>Being an active citizen shouldn't be difficult. Yet, for many living in cities like Milan, reporting a broken streetlamp or hazardous waste in a park feels like an uphill battle. Websites are hidden, forms are overwhelming, and reports often disappear into a black hole without any updates.</p>
+                <p>This is why my team and I developed <strong>Voce Civica</strong>. Born from the <em>Make It Real</em> contest, it's a civic-tech platform designed to simplify communication between citizens and their local municipalities using cutting-edge AI.</p>
+            </div>
 
+            <div class="pull-quote">
+                <p>"Voce Civica is not just an app — it is a digital bridge. We wanted to ensure that being an active citizen is no longer a privilege for the tech-savvy, but a right accessible to everyone."</p>
+            </div>
+        </div>
+
+        <!-- Journey -->
+        <div class="article-section reveal">
+            <p class="section-label">The Journey</p>
+            <h2 class="section-title">From Milan to the National Final</h2>
+            <div class="prose">
+                <p>Our journey began with a simple observation: broken glass in the parks of Milan — a danger to children and pets. When we tried to report it, we realized even tech-savvy people like us found the official process overwhelming and non-inclusive.</p>
+                <p>We brought this problem to the <a href="https://www.mondodigitale.org/progetti/make-it-real" target="_blank" rel="noopener noreferrer">Make It Real</a> initiative, run by <strong>Fondazione Mondo Digitale</strong> and <strong>Amazon</strong>. After refining our prototype, we were invited to the <a href="https://www.mondodigitale.org/en/news/inside-innovation-day-amazon" target="_blank" rel="noopener noreferrer">Amazon Innovation Day in Novara</a>, where Voce Civica was recognized as the best project among all teams from Lombardy and Piedmont.</p>
+                <p>The climax was <strong>RomeCup 2026</strong> at Sapienza University of Rome, where Voce Civica was celebrated as a national winner for its social impact and technical feasibility.</p>
+            </div>
+
+            <figure class="article-photo reveal">
+                <img src="romecup.jpeg" alt="Tashriful Alom and team in front of the RaiNews banner at RomeCup 2026, celebrating as national winners" loading="lazy">
+                <figcaption>RomeCup 2026 — Celebrating our national win at Sapienza University of Rome, in front of the RaiNews banner.</figcaption>
+            </figure>
+        </div>
+
+        <!-- Tech -->
+        <div class="article-section reveal">
+            <p class="section-label">Technical Architecture</p>
+            <h2 class="section-title">Built to scale, designed to include</h2>
+            <div class="prose">
+                <p>To ensure high performance and sustainability, we built Voce Civica on a modern, serverless stack designed for inclusivity and GDPR compliance from day one.</p>
+            </div>
+
+            <figure class="article-photo reveal">
+                <img src="giving_speech.jpg" alt="M Tashriful Alom presenting and demoing the Voce Civica app at the Make It Real competition" loading="lazy">
+                <figcaption>Presenting Voce Civica — walking judges through the app's AI features and civic impact at the competition.</figcaption>
+            </figure>
+
+            <div class="tech-grid">
+                <div class="tech-card reveal">
+                    <div class="tech-card-icon">📱</div>
+                    <div class="tech-card-name">FlutterFlow</div>
+                    <div class="tech-card-desc">Cross-platform frontend — iOS, Android, and Web — from a single codebase.</div>
+                </div>
+                <div class="tech-card reveal">
+                    <div class="tech-card-icon">🐍</div>
+                    <div class="tech-card-name">Python Backend</div>
+                    <div class="tech-card-desc">Robust AI integration and Public Administration system connectivity.</div>
+                </div>
+                <div class="tech-card reveal">
+                    <div class="tech-card-icon">🧠</div>
+                    <div class="tech-card-name">RAG — AI Core</div>
+                    <div class="tech-card-desc">Retrieval-Augmented Generation ensures accurate, municipality-specific responses.</div>
+                </div>
+                <div class="tech-card reveal">
+                    <div class="tech-card-icon">☁️</div>
+                    <div class="tech-card-name">AWS Ecosystem</div>
+                    <div class="tech-card-desc">Fully serverless, sovereign cloud for data privacy and GDPR compliance.</div>
+                </div>
+            </div>
+
+            <ul class="aws-list" style="margin-top: 20px;">
+                <li><div><strong>Amazon OpenSearch</strong> — Vector-based clustering to automatically prevent duplicate reports from different citizens.</div></li>
+                <li><div><strong>Amazon Transcribe & Translate</strong> — Voice-to-text and multilingual support, making the app accessible to all residents regardless of language.</div></li>
+                <li><div><strong>AWS Sovereign Cloud</strong> — Ensures GDPR compliance and keeps citizen data within Italy's legal jurisdiction.</div></li>
+            </ul>
+        </div>
+
+        <!-- Impact -->
+        <div class="article-section reveal">
+            <p class="section-label">Social Impact</p>
+            <h2 class="section-title">A safer, more livable city</h2>
+            <div class="prose">
+                <p>For citizens, Voce Civica offers transparency and ease of use. For municipalities, it reduces administrative workload by automatically clustering similar reports and prioritizing urgent safety hazards.</p>
+            </div>
+
+            <div class="impact-grid">
+                <div class="impact-card reveal">
+                    <div class="impact-card-icon">🌍</div>
+                    <div class="impact-card-title">Inclusive by Design</div>
+                    <div class="impact-card-desc">Multilingual support and voice-to-text services ensure every resident — regardless of language or ability — can participate.</div>
+                </div>
+                <div class="impact-card reveal">
+                    <div class="impact-card-icon">⚡</div>
+                    <div class="impact-card-title">Municipal Efficiency</div>
+                    <div class="impact-card-desc">AI-driven urgency scoring helps municipalities triage and respond to the most critical issues first.</div>
+                </div>
+                <div class="impact-card reveal">
+                    <div class="impact-card-icon">🔍</div>
+                    <div class="impact-card-title">Zero Duplicates</div>
+                    <div class="impact-card-desc">Automatic clustering of similar reports means councils see the full scale of an issue, not fragmented noise.</div>
+                </div>
+                <div class="impact-card reveal">
+                    <div class="impact-card-icon">🔒</div>
+                    <div class="impact-card-title">Privacy First</div>
+                    <div class="impact-card-desc">Built on AWS Sovereign Cloud with GDPR compliance embedded at the infrastructure level, not added as an afterthought.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Roadmap -->
+        <div class="article-section reveal">
+            <p class="section-label">What's Next</p>
+            <h2 class="section-title">The road ahead</h2>
+            <div class="prose">
+                <p>Launching within the Italian Public Administration requires a concrete, phased strategy. Our 5-phase roadmap is designed to move from prototype to national scale while meeting every regulatory requirement.</p>
+            </div>
+
+            <div class="roadmap" id="roadmap">
+                <div class="roadmap-item">
+                    <div class="roadmap-phase">Phase 1</div>
+                    <div class="roadmap-title">Standards Alignment</div>
+                    <div class="roadmap-desc">Align with <strong>Designers Italia</strong> guidelines and <strong>PNRR 1.4.1</strong> digital infrastructure standards.</div>
+                </div>
+                <div class="roadmap-item">
+                    <div class="roadmap-phase">Phase 2</div>
+                    <div class="roadmap-title">Regulatory Sandbox</div>
+                    <div class="roadmap-desc">Testing within the <strong>AgID Sandbox</strong> to validate compliance before real-world deployment.</div>
+                </div>
+                <div class="roadmap-item">
+                    <div class="roadmap-phase">Phase 3</div>
+                    <div class="roadmap-title">Institutional Partnership</div>
+                    <div class="roadmap-desc">Partner with "in-house" public entities such as <strong>ARIA</strong> or <strong>Cefriel</strong> for institutional backing.</div>
+                </div>
+                <div class="roadmap-item">
+                    <div class="roadmap-phase">Phase 4</div>
+                    <div class="roadmap-title">Pilot Testing</div>
+                    <div class="roadmap-desc">Live pilot with real municipalities via the <strong>Sperimentazione Italia</strong> framework.</div>
+                </div>
+                <div class="roadmap-item">
+                    <div class="roadmap-phase">Phase 5</div>
+                    <div class="roadmap-title">National Scaling</div>
+                    <div class="roadmap-desc">Scale across Italy through <strong>MePA</strong> and the public administration software reuse model.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Press -->
+        <div class="article-section reveal">
+            <p class="section-label">In the Press</p>
+            <h2 class="section-title">Coverage & recognition</h2>
+            <a href="https://www.rainews.it/maratona/2026/04/intelligenza-artificiale-robotica-e-scienze-umane-alla-romecup-edizione-2026--854d936e-a4ec-4199-b962-7055b118528f.html" target="_blank" rel="noopener noreferrer" class="press-card">
+                <div class="press-icon">📺</div>
+                <div>
+                    <div class="press-source">RaiNews</div>
+                    <div class="press-headline">AI, Robotics and Human Sciences at RomeCup 2026 — National Finals Coverage</div>
+                </div>
+                <div class="press-arrow">↗</div>
+            </a>
+            <a href="https://www.mondodigitale.org/en/news/inside-innovation-day-amazon" target="_blank" rel="noopener noreferrer" class="press-card">
+                <div class="press-icon">📦</div>
+                <div>
+                    <div class="press-source">Fondazione Mondo Digitale</div>
+                    <div class="press-headline">Inside Innovation Day @ Amazon — Voce Civica Presented in Novara</div>
+                </div>
+                <div class="press-arrow">↗</div>
+            </a>
+        </div>
+
+    </div><!-- /article-body -->
+</div>
+
+<!-- Footer -->
+<div class="container">
     <footer>
-        <p>&copy; 2026 M Tashriful Alom. Developed with a passion for Civic Tech and AI.</p>
+        <div class="footer-name">M Tashriful Alom</div>
+        <div class="footer-tagline">AI Developer & Computer Science Student · Milan, Italy</div>
+        <div class="footer-links">
+            <a href="https://www.linkedin.com/in/m-tashriful-alom/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+            <a href="https://github.com/m-tashriful-alom" target="_blank" rel="noopener noreferrer">GitHub</a>
+            <a href="index.html">Back to Home</a>
+        </div>
+        <div class="copyright">&copy; 2026 M Tashriful Alom. All Rights Reserved.</div>
     </footer>
+</div>
+
+<script>
+    // ── Nav scroll
+    const nav = document.querySelector('nav');
+    const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 40);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    // ── Hamburger
+    const hamburger = document.getElementById('hamburger');
+    const navDrawer = document.getElementById('navDrawer');
+    hamburger.addEventListener('click', () => {
+        const isOpen = hamburger.classList.toggle('open');
+        hamburger.setAttribute('aria-expanded', isOpen);
+        navDrawer.classList.toggle('open', isOpen);
+        navDrawer.setAttribute('aria-hidden', !isOpen);
+    });
+    document.querySelectorAll('.drawer-link').forEach(link => {
+        link.addEventListener('click', () => {
+            hamburger.classList.remove('open');
+            hamburger.setAttribute('aria-expanded', false);
+            navDrawer.classList.remove('open');
+            navDrawer.setAttribute('aria-hidden', true);
+        });
+    });
+
+    // ── Scroll reveal (cards + sections)
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry, i) => {
+            if (entry.isIntersecting) {
+                setTimeout(() => entry.target.classList.add('visible'), i * 80);
+                revealObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+    // ── Roadmap staggered reveal
+    const roadmapObserver = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+            document.querySelectorAll('.roadmap-item').forEach((item, i) => {
+                setTimeout(() => item.classList.add('visible'), i * 150);
+            });
+            roadmapObserver.disconnect();
+        }
+    }, { threshold: 0.2 });
+    const roadmapEl = document.getElementById('roadmap');
+    if (roadmapEl) roadmapObserver.observe(roadmapEl);
+</script>
 
 </body>
 </html>
