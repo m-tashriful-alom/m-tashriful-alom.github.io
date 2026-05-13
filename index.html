@@ -167,19 +167,30 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+            backdrop-filter: blur(0px);
+            -webkit-backdrop-filter: blur(0px);
+            background: transparent;
+            border-bottom: 1px solid transparent;
+            transition: background 0.4s ease, border-color 0.4s ease, backdrop-filter 0.4s ease;
+        }
+        nav.scrolled {
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            background: rgba(13,15,20,0.75);
+            background: rgba(13,15,20,0.92);
             border-bottom: 1px solid var(--border);
         }
         .nav-logo {
-            font-family: 'DM Serif Display', serif;
-            font-size: 1.35rem;
-            color: var(--accent);
+            display: flex;
+            align-items: center;
             text-decoration: none;
-            letter-spacing: 0.01em;
             flex-shrink: 0;
             transition: opacity 0.2s;
+        }
+        .nav-logo:hover { opacity: 0.75; }
+        .nav-logo-img {
+            height: 28px;
+            width: auto;
+            display: block;
         }
         .nav-logo:hover { opacity: 0.8; }
         .nav-links {
@@ -334,39 +345,6 @@
         @keyframes fadeUp {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* ── STAT STRIP ── */
-        .stat-strip {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1px;
-            background: var(--border);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            overflow: hidden;
-            margin-top: 72px;
-            opacity: 0;
-            animation: fadeUp 0.8s 0.8s forwards;
-        }
-        .stat {
-            background: var(--surface);
-            padding: 24px 20px;
-            text-align: center;
-        }
-        .stat-number {
-            font-family: 'DM Serif Display', serif;
-            font-size: 2.2rem;
-            color: var(--accent);
-            display: block;
-            line-height: 1;
-            margin-bottom: 6px;
-        }
-        .stat-label {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
         }
 
         /* ── BUTTONS ── */
@@ -721,7 +699,9 @@
 
 <!-- Navigation -->
 <nav role="navigation" aria-label="Main navigation">
-    <a href="#about" class="nav-logo" aria-label="Home">Tashrif</a>
+    <a href="#about" class="nav-logo" aria-label="Home">
+        <img src="logo_github.png" alt="Tashrif" class="nav-logo-img">
+    </a>
     <div class="nav-links">
         <a href="#about" class="nav-link">About</a>
         <a href="#projects" class="nav-link">Projects</a>
@@ -760,20 +740,6 @@
             </a>
         </div>
 
-        <div class="stat-strip" role="list" aria-label="Key facts">
-            <div class="stat" role="listitem">
-                <span class="stat-number">2026</span>
-                <span class="stat-label">RomeCup National Winner</span>
-            </div>
-            <div class="stat" role="listitem">
-                <span class="stat-number">3+</span>
-                <span class="stat-label">Years Freelancing</span>
-            </div>
-            <div class="stat" role="listitem">
-                <span class="stat-number">4+</span>
-                <span class="stat-label">Certifications</span>
-            </div>
-        </div>
     </section>
 </div>
 
@@ -922,6 +888,12 @@
 </div>
 
 <script>
+    // ── Nav background on scroll
+    const nav = document.querySelector('nav');
+    const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 40);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll(); // run once on load
+
     // ── Hamburger menu
     const hamburger = document.getElementById('hamburger');
     const navDrawer = document.getElementById('navDrawer');
