@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google-site-verification" content="q5KhlaQCrQWVqoo38iDYP6IdUGSa5PLI9ly9tfm7fKM" />
 
+    <!-- Primary SEO -->
     <title>M Tashriful Alom | AI & Computer Science Student | Milan, Italy</title>
     <meta name="description" content="M Tashriful Alom is a Milan-based computer science student at IIS Giovanni Giorgi, national RomeCup 2026 finalist, freelance web developer, and AI enthusiast specializing in civic tech and Python.">
     <meta name="keywords" content="M Tashriful Alom, Tashriful Alom, Milan student, RomeCup 2026, Voce Civica, IIS Giovanni Giorgi, AI developer, Python, civic tech, Fiverr developer, Make It Real Amazon">
@@ -42,7 +43,7 @@
       "@context": "https://schema.org",
       "@type": "Person",
       "name": "M Tashriful Alom",
-      "alternateName": ["Tashriful M Alom", "Tashriful Alom", "M. Tashriful Alom", "Tashriful M. Alom"],
+      "alternateName": ["Tashriful M Alom", "Tashriful Alom", "M. Tashriful Alom"],
       "url": "https://m-tashriful-alom.github.io/",
       "image": "https://m-tashriful-alom.github.io/profile.jpg",
       "address": {
@@ -56,7 +57,7 @@
       "alumniOf": {
         "@type": "School",
         "name": "IIS Giovanni Giorgi",
-        "alternateName": ["ITI Giorgi", "Istituto d'Istruzione Superiore Giovanni Giorgi", "IIS G. Giorgi", "IIS Giovanni Giorgi"],
+        "alternateName": ["ITI Giorgi", "Istituto d'Istruzione Superiore Giovanni Giorgi", "IIS G. Giorgi"],
         "address": {
           "@type": "PostalAddress",
           "addressLocality": "Milan",
@@ -161,19 +162,31 @@
             position: fixed;
             top: 0; left: 0; right: 0;
             z-index: 100;
-            padding: 16px 24px;
+            padding: 0 24px;
+            height: 58px;
             display: flex;
-            justify-content: center;
+            align-items: center;
+            justify-content: space-between;
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            background: rgba(13,15,20,0.6);
+            background: rgba(13,15,20,0.75);
             border-bottom: 1px solid var(--border);
         }
-        .nav-inner {
-            display: flex;
-            gap: 8px;
+        .nav-logo {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.35rem;
+            color: var(--accent);
+            text-decoration: none;
+            letter-spacing: 0.01em;
+            flex-shrink: 0;
+            transition: opacity 0.2s;
         }
-        nav a {
+        .nav-logo:hover { opacity: 0.8; }
+        .nav-links {
+            display: flex;
+            gap: 4px;
+        }
+        nav a.nav-link {
             color: var(--text-muted);
             text-decoration: none;
             font-size: 0.82rem;
@@ -184,9 +197,80 @@
             border-radius: 20px;
             transition: color 0.2s, background 0.2s;
         }
-        nav a:hover {
+        nav a.nav-link:hover {
             color: var(--text);
             background: var(--surface-2);
+        }
+
+        /* ── HAMBURGER ── */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            gap: 5px;
+            width: 36px;
+            height: 36px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+        .hamburger:hover { background: var(--surface-2); }
+        .hamburger span {
+            display: block;
+            height: 2px;
+            border-radius: 2px;
+            background: var(--text-muted);
+            transition: transform 0.3s, opacity 0.3s, width 0.3s;
+        }
+        .hamburger span:nth-child(3) { width: 65%; }
+        .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        .hamburger.open span:nth-child(2) { opacity: 0; }
+        .hamburger.open span:nth-child(3) { width: 100%; transform: translateY(-7px) rotate(-45deg); }
+
+        /* ── MOBILE DRAWER ── */
+        .nav-drawer {
+            display: none;
+            position: fixed;
+            top: 58px; left: 0; right: 0;
+            background: rgba(13,15,20,0.97);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            z-index: 99;
+            padding: 12px 16px 20px;
+            flex-direction: column;
+            gap: 4px;
+            transform: translateY(-8px);
+            opacity: 0;
+            transition: transform 0.25s ease, opacity 0.25s ease;
+        }
+        .nav-drawer.open {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        .nav-drawer a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            padding: 12px 16px;
+            border-radius: 10px;
+            transition: color 0.2s, background 0.2s;
+        }
+        .nav-drawer a:hover {
+            color: var(--text);
+            background: var(--surface-2);
+        }
+
+        @media (max-width: 640px) {
+            .nav-links { display: none; }
+            .hamburger { display: flex; }
+            .nav-drawer { display: flex; }
         }
 
         /* ── HERO ── */
@@ -601,7 +685,7 @@
         .footer-links a:hover { color: var(--accent); }
         .copyright {
             font-size: 0.75rem;
-            color: #3a3e4a;
+            color: #7a808f;
         }
 
         /* ── SCROLL ANIMATIONS ── */
@@ -623,8 +707,6 @@
 
         /* ── RESPONSIVE ── */
         @media (max-width: 600px) {
-            .stat-strip { grid-template-columns: 1fr; }
-            nav a { font-size: 0.72rem; padding: 5px 10px; }
             .card { padding: 22px; }
             .exp-item { grid-template-columns: 1fr; }
             .exp-period { text-align: left; }
@@ -639,14 +721,27 @@
 
 <!-- Navigation -->
 <nav role="navigation" aria-label="Main navigation">
-    <div class="nav-inner">
-        <a href="#about">About</a>
-        <a href="#projects">Projects</a>
-        <a href="#experience">Experience</a>
-        <a href="#education">Education</a>
-        <a href="#certifications">Certifications</a>
+    <a href="#about" class="nav-logo" aria-label="Home">Tashrif</a>
+    <div class="nav-links">
+        <a href="#about" class="nav-link">About</a>
+        <a href="#projects" class="nav-link">Projects</a>
+        <a href="#experience" class="nav-link">Experience</a>
+        <a href="#education" class="nav-link">Education</a>
+        <a href="#certifications" class="nav-link">Certifications</a>
     </div>
+    <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+    </button>
 </nav>
+
+<!-- Mobile drawer -->
+<div class="nav-drawer" id="navDrawer" aria-hidden="true">
+    <a href="#about" class="drawer-link">About</a>
+    <a href="#projects" class="drawer-link">Projects</a>
+    <a href="#experience" class="drawer-link">Experience</a>
+    <a href="#education" class="drawer-link">Education</a>
+    <a href="#certifications" class="drawer-link">Certifications</a>
+</div>
 
 <!-- Hero -->
 <div class="container">
@@ -663,6 +758,21 @@
             <a href="voce-civica-make-it-real-romecup-2026.html" target="_blank" class="btn btn-ghost">
                 See Featured Project
             </a>
+        </div>
+
+        <div class="stat-strip" role="list" aria-label="Key facts">
+            <div class="stat" role="listitem">
+                <span class="stat-number">2026</span>
+                <span class="stat-label">RomeCup National Winner</span>
+            </div>
+            <div class="stat" role="listitem">
+                <span class="stat-number">3+</span>
+                <span class="stat-label">Years Freelancing</span>
+            </div>
+            <div class="stat" role="listitem">
+                <span class="stat-number">4+</span>
+                <span class="stat-label">Certifications</span>
+            </div>
         </div>
     </section>
 </div>
@@ -805,13 +915,35 @@
         <div class="footer-links">
             <a href="https://www.linkedin.com/in/m-tashriful-alom/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
             <a href="https://github.com/m-tashriful-alom" target="_blank" rel="noopener noreferrer">GitHub</a>
+            <a href="voce-civica-make-it-real-romecup-2026.html">Voce Civica Case Study</a>
         </div>
         <div class="copyright">&copy; 2026 M Tashriful Alom. All Rights Reserved.</div>
     </footer>
 </div>
 
 <script>
-    // ── Scroll reveal
+    // ── Hamburger menu
+    const hamburger = document.getElementById('hamburger');
+    const navDrawer = document.getElementById('navDrawer');
+
+    hamburger.addEventListener('click', () => {
+        const isOpen = hamburger.classList.toggle('open');
+        hamburger.setAttribute('aria-expanded', isOpen);
+        navDrawer.classList.toggle('open', isOpen);
+        navDrawer.setAttribute('aria-hidden', !isOpen);
+    });
+
+    // Close drawer when a link is tapped
+    document.querySelectorAll('.drawer-link').forEach(link => {
+        link.addEventListener('click', () => {
+            hamburger.classList.remove('open');
+            hamburger.setAttribute('aria-expanded', false);
+            navDrawer.classList.remove('open');
+            navDrawer.setAttribute('aria-hidden', true);
+        });
+    });
+
+
     const revealObserver = new IntersectionObserver((entries) => {
         entries.forEach((entry, i) => {
             if (entry.isIntersecting) {
