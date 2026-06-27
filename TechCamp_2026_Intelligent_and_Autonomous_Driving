@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inside TechCamp 2026: Building Autonomous Vehicles at Politecnico di Milano | M Tashriful Alom</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <meta name="description" content="A week inside Politecnico di Milano's TechCamp 2026 — learning perception, localization, planning, and control by coding MATLAB algorithms and testing them on YAPE, the campus's micro-autonomous vehicle.">
+    <meta name="author" content="M Tashriful Alom">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Inside TechCamp 2026: Building Autonomous Vehicles at Politecnico di Milano">
+    <meta property="og:description" content="30 hours of perception, localization, planning, and control — from MATLAB code to a real micro-autonomous vehicle, at Politecnico di Milano's TechCamp 2026.">
+    <meta property="og:url" content="https://m-tashriful-alom.github.io/techcamp-2026-autonomous-vehicles.html">
+    <meta property="og:image" content="https://m-tashriful-alom.github.io/techcamp%202026.jpg">
+    <meta property="og:image:alt" content="M Tashriful Alom's Certificate of Participation for Politecnico di Milano TechCamp 2026">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #0d0f14;
+            --surface: #13161e;
+            --surface-2: #1a1e28;
+            --border: rgba(255,255,255,0.07);
+            --text: #e8e6e1;
+            --text-muted: #8a8f9e;
+            --accent: #5b8aff;
+            --accent-2: #c8a96e;
+            --accent-glow: rgba(91, 138, 255, 0.15);
+            --mono-dim: #5a6478;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 999;
+            opacity: 0.4;
+        }
+
+        .mono { font-family: 'JetBrains Mono', monospace; }
+
+        .glow-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.22;
+        }
+        .glow-orb-1 { width: 500px; height: 500px; background: var(--accent); top: -200px; right: -150px; animation: drift 12s ease-in-out infinite alternate; }
+        .glow-orb-2 { width: 400px; height: 400px; background: var(--accent-2); bottom: 10%; left: -150px; animation: drift 16s ease-in-out infinite alternate-reverse; }
+        @keyframes drift { from { transform: translate(0,0); } to { transform: translate(30px, 40px); } }
+
+        /* ── NAV ── */
+        nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            padding: 0 24px;
+            height: 58px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            backdrop-filter: blur(0px);
+            -webkit-backdrop-filter: blur(0px);
+            background: transparent;
+            border-bottom: 1px solid transparent;
+            transition: background 0.4s ease, border-color 0.4s ease, backdrop-filter 0.4s ease;
+        }
+        nav.scrolled {
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            background: rgba(13,15,20,0.92);
+            border-bottom: 1px solid var(--border);
+        }
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            flex-shrink: 0;
+            transition: opacity 0.2s;
+        }
+        .nav-logo:hover { opacity: 0.75; }
+        .nav-logo-img { height: 28px; width: auto; display: block; }
+        .nav-links { display: flex; gap: 4px; }
+        nav a.nav-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.82rem;
+            font-weight: 500;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            padding: 6px 14px;
+            border-radius: 20px;
+            transition: color 0.2s, background 0.2s;
+        }
+        nav a.nav-link:hover { color: var(--text); background: var(--surface-2); }
+
+        /* ── HAMBURGER ── */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            gap: 5px;
+            width: 36px; height: 36px;
+            background: none; border: none;
+            cursor: pointer; padding: 4px;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+        .hamburger:hover { background: var(--surface-2); }
+        .hamburger span {
+            display: block; height: 2px; border-radius: 2px;
+            background: var(--text-muted);
+            transition: transform 0.3s, opacity 0.3s, width 0.3s;
+        }
+        .hamburger span:nth-child(3) { width: 65%; }
+        .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        .hamburger.open span:nth-child(2) { opacity: 0; }
+        .hamburger.open span:nth-child(3) { width: 100%; transform: translateY(-7px) rotate(-45deg); }
+
+        .nav-drawer {
+            display: none;
+            position: fixed;
+            top: 58px; left: 0; right: 0;
+            background: rgba(13,15,20,0.97);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            z-index: 99;
+            padding: 12px 16px 20px;
+            flex-direction: column; gap: 4px;
+            transform: translateY(-8px); opacity: 0;
+            transition: transform 0.25s ease, opacity 0.25s ease;
+        }
+        .nav-drawer.open { transform: translateY(0); opacity: 1; }
+        .nav-drawer a {
+            color: var(--text-muted); text-decoration: none;
+            font-size: 0.9rem; font-weight: 500;
+            letter-spacing: 0.06em; text-transform: uppercase;
+            padding: 12px 16px; border-radius: 10px;
+            transition: color 0.2s, background 0.2s;
+        }
+        .nav-drawer a:hover { color: var(--text); background: var(--surface-2); }
+
+        @media (max-width: 640px) {
+            .nav-links { display: none; }
+            .hamburger { display: flex; }
+            .nav-drawer { display: flex; }
+        }
+
+        /* ── LAYOUT ── */
+        .container {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ── SCROLLBAR ── */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--surface-2); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #2a2e3a; }
+
+        /* ── SCROLL ANIMATIONS ── */
+        .reveal {
+            opacity: 0; transform: translateY(24px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+
+        /* ── HERO ── */
+        .article-hero {
+            padding-top: 130px;
+            padding-bottom: 64px;
+        }
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.82rem;
+            font-weight: 500;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            margin-bottom: 40px;
+            transition: color 0.2s;
+        }
+        .back-link:hover { color: var(--accent); }
+        .back-link::before { content: '←'; }
+
+        .article-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.78rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--accent);
+            font-weight: 500;
+            margin-bottom: 20px;
+        }
+        .article-eyebrow::before {
+            content: '';
+            display: inline-block;
+            width: 24px; height: 1px;
+            background: var(--accent);
+        }
+        .article-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: clamp(2.2rem, 6vw, 3.8rem);
+            line-height: 1.08;
+            color: var(--text);
+            margin-bottom: 20px;
+        }
+        .article-title em { font-style: italic; color: var(--accent); }
+        .article-meta {
+            font-size: 0.83rem;
+            color: var(--text-muted);
+            margin-bottom: 28px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px;
+            align-items: center;
+        }
+
+        /* ── BADGE ROW ── */
+        .badge-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 40px;
+        }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            letter-spacing: 0.04em;
+            color: var(--text-muted);
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 7px 12px;
+        }
+        .badge.badge-accent {
+            color: var(--accent);
+            border-color: rgba(91,138,255,0.3);
+            background: rgba(91,138,255,0.06);
+        }
+        .badge-dot {
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: var(--accent);
+            flex-shrink: 0;
+            box-shadow: 0 0 6px var(--accent);
+        }
+
+        /* ── CERTIFICATE BANNER ── */
+        .award-banner {
+            background: linear-gradient(135deg, #0f1422 0%, var(--surface) 100%);
+            border: 1px solid rgba(91,138,255,0.3);
+            border-radius: 16px;
+            padding: 36px 40px;
+            display: flex;
+            align-items: center;
+            gap: 28px;
+            margin-bottom: 64px;
+            position: relative;
+            overflow: hidden;
+        }
+        .award-banner::before {
+            content: '';
+            position: absolute;
+            top: -1px; left: 40px;
+            width: 80px; height: 3px;
+            background: var(--accent);
+            border-radius: 0 0 4px 4px;
+        }
+        .award-trophy {
+            font-size: 3rem;
+            flex-shrink: 0;
+            line-height: 1;
+        }
+        .award-text h3 {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.2rem;
+            color: var(--accent);
+            margin-bottom: 4px;
+        }
+        .award-text p {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        /* ── ARTICLE BODY ── */
+        .article-body { border-top: 1px solid var(--border); padding-top: 64px; }
+
+        .section-label {
+            font-size: 0.72rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .section-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: clamp(1.5rem, 3.5vw, 2rem);
+            color: var(--text);
+            margin-bottom: 24px;
+            line-height: 1.2;
+        }
+
+        .prose p {
+            color: var(--text-muted);
+            font-size: 0.97rem;
+            line-height: 1.8;
+            margin-bottom: 18px;
+        }
+        .prose p strong { color: var(--text); font-weight: 600; }
+        .prose p:last-child { margin-bottom: 0; }
+        .prose a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(91,138,255,0.3); transition: border-color 0.2s; }
+        .prose a:hover { border-color: var(--accent); }
+
+        /* ── PULL QUOTE ── */
+        .pull-quote {
+            border-left: 3px solid var(--accent);
+            padding: 20px 28px;
+            margin: 40px 0;
+            background: var(--surface);
+            border-radius: 0 12px 12px 0;
+        }
+        .pull-quote p {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.15rem;
+            font-style: italic;
+            color: var(--text);
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        /* ── DAILY RHYTHM ── */
+        .rhythm-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-top: 28px;
+        }
+        .rhythm-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 24px;
+            position: relative;
+        }
+        .rhythm-time {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            color: var(--mono-dim);
+            letter-spacing: 0.04em;
+            margin-bottom: 12px;
+        }
+        .rhythm-card-icon { font-size: 1.5rem; margin-bottom: 12px; }
+        .rhythm-card-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.05rem;
+            color: var(--text);
+            margin-bottom: 8px;
+        }
+        .rhythm-card-desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; }
+
+        /* ── PHOTOS ── */
+        .article-photo {
+            width: 100%;
+            border-radius: 14px;
+            overflow: hidden;
+            margin-top: 36px;
+            position: relative;
+            border: 1px solid var(--border);
+            box-shadow: 0 20px 50px -20px rgba(0,0,0,0.6);
+        }
+        .article-photo img {
+            width: 100%;
+            height: auto;
+            aspect-ratio: 16/10;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.6s ease;
+        }
+        .article-photo.is-certificate img {
+            aspect-ratio: 4/3;
+            object-fit: contain;
+            background: #f4f2ec;
+        }
+        .article-photo:hover img { transform: scale(1.02); }
+        .article-photo figcaption {
+            padding: 14px 20px;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .article-photo figcaption::before {
+            content: '↑';
+            color: var(--accent);
+            font-size: 0.7rem;
+        }
+
+        /* ── ARTICLE SECTIONS ── */
+        .article-section {
+            padding: 48px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        .article-section:last-of-type { border-bottom: none; }
+
+        /* ── MODULE CARDS (Perception / Localization / Navigation / Control) ── */
+        .module-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 28px;
+        }
+        .module-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 26px 24px;
+            transition: border-color 0.3s, transform 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        .module-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, var(--accent-glow), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .module-card:hover { border-color: rgba(91,138,255,0.3); transform: translateY(-4px); }
+        .module-card:hover::before { opacity: 1; }
+        .module-tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.68rem;
+            color: var(--mono-dim);
+            letter-spacing: 0.06em;
+            margin-bottom: 14px;
+            position: relative;
+        }
+        .module-card-icon { font-size: 1.7rem; margin-bottom: 10px; position: relative; }
+        .module-card-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.12rem;
+            color: var(--text);
+            margin-bottom: 8px;
+            position: relative;
+        }
+        .module-card-desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; position: relative; }
+
+        /* ── LAB VISIT TIMELINE ── */
+        .lab-strip {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 28px;
+            flex-wrap: wrap;
+        }
+        .lab-chip {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--accent-2);
+            background: rgba(200,169,110,0.08);
+            border: 1px solid rgba(200,169,110,0.25);
+            border-radius: 999px;
+            padding: 6px 14px;
+        }
+
+        /* ── FOOTER ── */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 48px 0;
+            text-align: center;
+        }
+        .footer-name {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.5rem;
+            color: var(--text);
+            margin-bottom: 8px;
+        }
+        .footer-tagline { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 28px; }
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+        }
+        .footer-links a { color: var(--text-muted); text-decoration: none; font-size: 0.82rem; transition: color 0.2s; }
+        .footer-links a:hover { color: var(--accent); }
+        .copyright { font-size: 0.75rem; color: #7a808f; }
+
+        @media (max-width: 600px) {
+            .award-banner { flex-direction: column; text-align: center; padding: 28px 24px; }
+            .module-grid { grid-template-columns: 1fr; }
+            .rhythm-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="glow-orb glow-orb-1" aria-hidden="true"></div>
+<div class="glow-orb glow-orb-2" aria-hidden="true"></div>
+
+<!-- Navigation — links go to index.html sections -->
+<nav role="navigation" aria-label="Main navigation">
+    <a href="index.html#about" class="nav-logo" aria-label="Home">
+        <img src="logo_github.png" alt="Tashrif" class="nav-logo-img">
+    </a>
+    <div class="nav-links">
+        <a href="index.html#about" class="nav-link">About</a>
+        <a href="index.html#projects" class="nav-link">Projects</a>
+        <a href="index.html#experience" class="nav-link">Experience</a>
+        <a href="index.html#education" class="nav-link">Education</a>
+        <a href="index.html#certifications" class="nav-link">Certifications</a>
+    </div>
+    <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+    </button>
+</nav>
+
+<div class="nav-drawer" id="navDrawer" aria-hidden="true">
+    <a href="index.html#about" class="drawer-link">About</a>
+    <a href="index.html#projects" class="drawer-link">Projects</a>
+    <a href="index.html#experience" class="drawer-link">Experience</a>
+    <a href="index.html#education" class="drawer-link">Education</a>
+    <a href="index.html#certifications" class="drawer-link">Certifications</a>
+</div>
+
+<!-- Article hero -->
+<div class="container">
+    <div class="article-hero">
+        <p class="article-eyebrow">Project Case Study · June 2026</p>
+        <h1 class="article-title">Teaching a Machine<br>to <em>See, Think,</em><br>and Drive</h1>
+        <p class="article-meta">
+            <span>By M Tashriful Alom</span>
+            <span>Politecnico di Milano · Campus Leonardo</span>
+        </p>
+
+        <div class="badge-row">
+            <span class="badge badge-accent"><span class="badge-dot"></span>June 2026</span>
+            <span class="badge mono">30h · 09:30–16:30</span>
+            <span class="badge mono">5 min read</span>
+            <span class="badge mono">EN</span>
+        </div>
+
+        <div class="award-banner reveal">
+            <div class="award-trophy">🚗</div>
+            <div class="award-text">
+                <h3>TechCamp 2026 — Intelligent and Autonomous Vehicles</h3>
+                <p>30 hours of university-level theory and hands-on lab work at Politecnico di Milano, culminating in a Certificate of Participation signed by Scientific Director Mara Tanelli.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Article body -->
+<div class="container">
+    <div class="article-body">
+
+        <!-- Introduction -->
+        <div class="article-section reveal">
+            <p class="section-label">The Premise</p>
+            <h2 class="section-title">One week, four questions every self-driving car has to answer</h2>
+            <div class="prose">
+                <p>How does a car know what's around it? How does it know exactly where it is? How does it decide where to go? And how does it actually move there, smoothly and safely? Those four questions are the entire field of autonomous driving compressed into a single sentence — and they were also the exact structure of <strong>TechCamp 2026: Intelligent and Autonomous Vehicles</strong>, a week-long program I attended at <strong>Politecnico di Milano</strong>, Campus Leonardo.</p>
+                <p>For five days — June 22 to June 26 — the course ran <strong>09:30 to 16:30</strong>, entirely in English, for a total of <strong>30 hours</strong>. It was structured around a rhythm I'd never experienced before in a single course: real university-level theory in the morning, and real hardware in the afternoon.</p>
+            </div>
+
+            <div class="pull-quote">
+                <p>"By Wednesday I stopped thinking of perception, localization, planning, and control as four separate topics — they're really four answers to the same question a car asks itself every few milliseconds: what do I do next?"</p>
+            </div>
+        </div>
+
+        <!-- Daily rhythm -->
+        <div class="article-section reveal">
+            <p class="section-label">The Daily Rhythm</p>
+            <h2 class="section-title">Theory in the morning, hardware in the afternoon</h2>
+            <div class="prose">
+                <p>Every day followed the same logic, and that consistency is what made the week work. Mornings were dense — proper university-level lectures on the mathematics and engineering behind autonomous systems, taught entirely in English by Politecnico faculty. Afternoons were where that math stopped being abstract: we opened laptops, wrote MATLAB code, and tested it directly against the behavior of a real vehicle.</p>
+            </div>
+
+            <div class="rhythm-grid">
+                <div class="rhythm-card reveal">
+                    <div class="rhythm-time">09:30 — 13:00</div>
+                    <div class="rhythm-card-icon">📐</div>
+                    <div class="rhythm-card-title">Morning: Theory</div>
+                    <div class="rhythm-card-desc">University-level lectures on perception, localization, planning, and control — the mathematical foundations behind every autonomous vehicle on the road.</div>
+                </div>
+                <div class="rhythm-card reveal">
+                    <div class="rhythm-time">14:00 — 16:30</div>
+                    <div class="rhythm-card-icon">🛠️</div>
+                    <div class="rhythm-card-title">Afternoon: Practice</div>
+                    <div class="rhythm-card-desc">Translating that morning's theory into MATLAB code, then testing it directly on YAPE, the campus's micro-autonomous delivery vehicle.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- The four modules -->
+        <div class="article-section reveal">
+            <p class="section-label">The Core Curriculum</p>
+            <h2 class="section-title">Four modules, one driving stack</h2>
+            <div class="prose">
+                <p>The week was built around the four pillars that make up any real autonomous driving stack. Each one builds on the last — you can't plan a path if you don't know where you are, and you can't know where you are if you can't sense the world around you.</p>
+            </div>
+
+            <div class="module-grid">
+                <div class="module-card reveal">
+                    <div class="module-tag">MODULE — PERCEPTION</div>
+                    <div class="module-card-icon">📡</div>
+                    <div class="module-card-title">Perception</div>
+                    <div class="module-card-desc">How autonomous systems see the world using LiDAR, radar, and cameras — and how those sensor streams get fused into one coherent picture of the environment.</div>
+                </div>
+                <div class="module-card reveal">
+                    <div class="module-tag">MODULE — LOCALIZATION</div>
+                    <div class="module-card-icon">📍</div>
+                    <div class="module-card-title">Localization</div>
+                    <div class="module-card-desc">How a self-driving vehicle figures out its exact coordinates in the world, continuously, even as sensor noise and uncertainty pile up.</div>
+                </div>
+                <div class="module-card reveal">
+                    <div class="module-tag">MODULE — NAVIGATION</div>
+                    <div class="module-card-icon">🧭</div>
+                    <div class="module-card-title">Navigation & Planning</div>
+                    <div class="module-card-desc">The logic behind plotting a path from A to B, and dynamically replanning it the moment an obstacle appears where it shouldn't be.</div>
+                </div>
+                <div class="module-card reveal">
+                    <div class="module-tag">MODULE — CONTROL</div>
+                    <div class="module-card-icon">⚙️</div>
+                    <div class="module-card-title">Control</div>
+                    <div class="module-card-desc">The motion control algorithms that take a planned path and turn it into precise steering, throttle, and braking commands the vehicle actually follows.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MATLAB + YAPE -->
+        <div class="article-section reveal">
+            <p class="section-label">From Equations to Motion</p>
+            <h2 class="section-title">Where the math actually moves</h2>
+            <div class="prose">
+                <p>The afternoons were the part of TechCamp that made everything click. We wrote and tested our own algorithms in <strong>MATLAB</strong>, watching the same equations from the morning's lecture turn into something that visibly moved on screen — a simulated trajectory, a corrected position estimate, a re-routed path around an obstacle.</p>
+            </div>
+
+            <figure class="article-photo reveal">
+                <img src="matlab-coding.jpg" alt="Working through MATLAB code for control and planning algorithms during a TechCamp 2026 afternoon lab session" loading="lazy">
+                <figcaption>Afternoon lab — turning the morning's control and planning theory into working MATLAB code.</figcaption>
+            </figure>
+
+            <div class="prose" style="margin-top: 36px;">
+                <p>Code on a laptop screen is convincing, but it's not the same as code that has to deal with a real, physical vehicle. That's what made our main lab platform, <strong>YAPE</strong> — Politecnico's micro-autonomous delivery vehicle — so valuable. Every afternoon, we tested our perception, localization, and control logic directly on it, which meant immediately confronting the gap between "this works in simulation" and "this works when a real motor, real sensor noise, and real friction get involved."</p>
+            </div>
+
+            <figure class="article-photo reveal">
+                <img src="yape-testing.jpg" alt="Testing perception and control algorithms directly on YAPE, the micro-autonomous delivery vehicle, at Politecnico di Milano" loading="lazy">
+                <figcaption>Hands-on with YAPE — running our own algorithms on a real micro-autonomous vehicle.</figcaption>
+            </figure>
+        </div>
+
+        <!-- Thursday lab visit -->
+        <div class="article-section reveal">
+            <p class="section-label">Thursday's Highlight</p>
+            <h2 class="section-title">The Maserati that races itself</h2>
+            <div class="prose">
+                <p>Thursday broke the week's rhythm in the best way: instead of our usual classroom and lab setup, we visited Politecnico's cutting-edge autonomous driving research laboratory. It's one thing to study perception and control as separate modules; it's another to walk into a lab and see them combined inside a vehicle built for real competition.</p>
+            </div>
+
+            <div class="lab-strip">
+                <span class="lab-chip">THU · LAB VISIT</span>
+                <span class="lab-chip">FULL AUTONOMY STACK</span>
+                <span class="lab-chip">RACE-TESTED</span>
+            </div>
+
+            <div class="prose" style="margin-top: 28px;">
+                <p>The centerpiece of the visit was a <strong>Maserati sports car that the university had completely re-engineered to drive itself</strong> — no human input, sensors and compute packed where the cabin used to be purely mechanical. This wasn't a one-off prototype gathering dust: this exact vehicle has competed in <strong>prestigious international autonomous racing competitions</strong>, which made every module we'd studied that week suddenly very concrete. The perception system on that car has to identify a track boundary at racing speed. The localization has to hold up under vibration and g-force. The control has to execute, not just suggest.</p>
+            </div>
+
+            <figure class="article-photo reveal">
+                <img src="maserati-autonomous.jpg" alt="The fully autonomous, race-modified Maserati sports car on display at Politecnico di Milano's autonomous driving research laboratory" loading="lazy">
+                <figcaption>Politecnico's autonomous research lab — the self-driving Maserati used in international racing competitions.</figcaption>
+            </figure>
+        </div>
+
+        <!-- Certificate / closing -->
+        <div class="article-section reveal">
+            <p class="section-label">The Takeaway</p>
+            <h2 class="section-title">Thirty hours that reframed how I see a car</h2>
+            <div class="prose">
+                <p>I came into TechCamp 2026 thinking of autonomous vehicles as one big, somewhat mysterious system. I left with a clear mental model: sense, locate, plan, control, repeat — and a much better instinct for where the genuinely hard engineering problems live inside that loop. Coding the algorithms myself, then watching YAPE execute them, then seeing the same ideas pushed to their limit in a self-driving race car, is the kind of progression that no textbook chapter can substitute for.</p>
+                <p>The week closed on June 26 with a <strong>Certificate of Participation</strong>, confirming completion of the 30-hour course, signed by Scientific Director <strong>Mara Tanelli</strong>.</p>
+            </div>
+
+            <figure class="article-photo is-certificate reveal">
+                <img src="techcamp 2026.jpg" alt="Certificate of Participation for Alom M Tashriful, confirming completion of the 30-hour TechCamp 2026 course at Politecnico di Milano, signed by Scientific Director Mara Tanelli" loading="lazy">
+                <figcaption>Certificate of Participation — TechCamp 2026, Politecnico di Milano, issued June 26, 2026.</figcaption>
+            </figure>
+        </div>
+
+    </div><!-- /article-body -->
+</div>
+
+<!-- Footer -->
+<div class="container">
+    <footer>
+        <div class="footer-name">M Tashriful Alom</div>
+        <div class="footer-tagline">AI Developer & Computer Science Student · Milan, Italy</div>
+        <div class="footer-links">
+            <a href="https://www.linkedin.com/in/m-tashriful-alom/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+            <a href="https://github.com/m-tashriful-alom" target="_blank" rel="noopener noreferrer">GitHub</a>
+            <a href="index.html">Back to Home</a>
+        </div>
+        <div class="copyright">&copy; 2026 M Tashriful Alom. All Rights Reserved.</div>
+    </footer>
+</div>
+
+<script>
+    // ── Nav scroll
+    const nav = document.querySelector('nav');
+    const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 40);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    // ── Hamburger
+    const hamburger = document.getElementById('hamburger');
+    const navDrawer = document.getElementById('navDrawer');
+    hamburger.addEventListener('click', () => {
+        const isOpen = hamburger.classList.toggle('open');
+        hamburger.setAttribute('aria-expanded', isOpen);
+        navDrawer.classList.toggle('open', isOpen);
+        navDrawer.setAttribute('aria-hidden', !isOpen);
+    });
+    document.querySelectorAll('.drawer-link').forEach(link => {
+        link.addEventListener('click', () => {
+            hamburger.classList.remove('open');
+            hamburger.setAttribute('aria-expanded', false);
+            navDrawer.classList.remove('open');
+            navDrawer.setAttribute('aria-hidden', true);
+        });
+    });
+
+    // ── Scroll reveal (cards + sections)
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry, i) => {
+            if (entry.isIntersecting) {
+                setTimeout(() => entry.target.classList.add('visible'), i * 80);
+                revealObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+</script>
+
+</body>
+</html>
