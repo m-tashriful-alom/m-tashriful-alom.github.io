@@ -35,7 +35,7 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
     <!-- Structured Data (JSON-LD) -->
     <script type="application/ld+json">
@@ -110,6 +110,7 @@
             --accent-2: #5b8aff;
             --accent-glow: rgba(200, 169, 110, 0.15);
             --green: #4ade80;
+            --mono-dim: #5a6478;
         }
 
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -123,6 +124,8 @@
             line-height: 1.7;
             overflow-x: hidden;
         }
+
+        .mono { font-family: 'JetBrains Mono', monospace; }
 
         /* ── NOISE GRAIN OVERLAY ── */
         body::before {
@@ -284,13 +287,10 @@
             .nav-drawer { display: flex; }
         }
 
-        /* ── HERO ── */
+        /* ── HERO (article-header style, matching blog posts) ── */
         .hero {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding-top: 80px;
+            padding-top: 130px;
+            padding-bottom: 64px;
         }
         .hero-eyebrow {
             display: inline-flex;
@@ -301,7 +301,7 @@
             text-transform: uppercase;
             color: var(--accent);
             font-weight: 500;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
             opacity: 0;
             animation: fadeUp 0.8s 0.2s forwards;
         }
@@ -314,10 +314,10 @@
         }
         .hero h1 {
             font-family: 'DM Serif Display', serif;
-            font-size: clamp(3rem, 8vw, 5.5rem);
-            line-height: 1.05;
+            font-size: clamp(2.6rem, 7vw, 4.6rem);
+            line-height: 1.06;
             color: var(--text);
-            margin-bottom: 8px;
+            margin-bottom: 20px;
             opacity: 0;
             animation: fadeUp 0.8s 0.35s forwards;
         }
@@ -326,20 +326,53 @@
             color: var(--accent);
         }
         .hero-sub {
-            font-size: 1.05rem;
+            font-size: 0.97rem;
             color: var(--text-muted);
-            max-width: 500px;
-            margin-bottom: 40px;
-            font-weight: 300;
+            max-width: 540px;
+            margin-bottom: 28px;
+            line-height: 1.8;
             opacity: 0;
             animation: fadeUp 0.8s 0.5s forwards;
+        }
+        .badge-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 32px;
+            opacity: 0;
+            animation: fadeUp 0.8s 0.6s forwards;
+        }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            letter-spacing: 0.04em;
+            color: var(--text-muted);
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 7px 12px;
+        }
+        .badge.badge-accent {
+            color: var(--accent);
+            border-color: rgba(200,169,110,0.3);
+            background: rgba(200,169,110,0.06);
+        }
+        .badge-dot {
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: var(--accent);
+            flex-shrink: 0;
+            box-shadow: 0 0 6px var(--accent);
         }
         .hero-cta {
             display: flex;
             gap: 12px;
             flex-wrap: wrap;
             opacity: 0;
-            animation: fadeUp 0.8s 0.65s forwards;
+            animation: fadeUp 0.8s 0.7s forwards;
         }
 
         @keyframes fadeUp {
@@ -547,6 +580,13 @@
             grid-column: 1 / -1;
             line-height: 1.6;
         }
+        .exp-desc a {
+            color: var(--accent);
+            text-decoration: none;
+            border-bottom: 1px solid rgba(200,169,110,0.3);
+            transition: border-color 0.2s;
+        }
+        .exp-desc a:hover { border-color: var(--accent); }
 
         /* ── CERT LIST ── */
         .cert-list {
@@ -707,7 +747,7 @@
         <a href="#projects" class="nav-link">Projects</a>
         <a href="#experience" class="nav-link">Experience</a>
         <a href="#education" class="nav-link">Education</a>
-        <a href="#certifications" class="nav-link">Certifications</a>
+        <a href="blogs.html" class="nav-link">Blogs</a>
     </div>
     <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
         <span></span><span></span><span></span>
@@ -720,23 +760,27 @@
     <a href="#projects" class="drawer-link">Projects</a>
     <a href="#experience" class="drawer-link">Experience</a>
     <a href="#education" class="drawer-link">Education</a>
-    <a href="#certifications" class="drawer-link">Certifications</a>
+    <a href="blogs.html" class="drawer-link">Blogs</a>
 </div>
 
-<!-- Hero -->
+<!-- Hero (article-header style, matching the blog posts) -->
 <div class="container">
     <section class="hero" id="about" aria-label="Introduction">
         <span class="hero-eyebrow">Tech Enthusiast · Lifelong Learner</span>
         <h1>M Tashriful<br><em>Alom</em></h1>
         <p class="hero-sub">
-            I’m a Computer Science student with a deep curiosity for how things work. My journey has taken me from building websites for international clients to developing AI solutions for civic engagement. To me, coding is a tool for impact, and I'm always looking for the next meaningful thing to build.
+            I'm a Computer Science student with a deep curiosity for how things work. My journey has taken me from building websites for international clients to developing AI solutions for civic engagement. To me, coding is a tool for impact, and I'm always looking for the next meaningful thing to build.
         </p>
+        <div class="badge-row">
+            <span class="badge badge-accent"><span class="badge-dot"></span>Milan, Italy</span>
+            <span class="badge mono">CS Student</span>
+        </div>
         <div class="hero-cta">
             <a href="https://www.linkedin.com/in/m-tashriful-alom/" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
                 LinkedIn Profile ↗
             </a>
-            <a href="voce-civica-make-it-real-romecup-2026.html" target="_blank" class="btn btn-ghost">
-                See Featured Project
+            <a href="blogs.html" class="btn btn-ghost">
+                Read the Blog
             </a>
         </div>
 
@@ -784,6 +828,15 @@
                 </div>
                 <div class="exp-period">Oct 2023 – Aug 2024</div>
                 <div class="exp-desc">Built functional WordPress and Shopify websites for international clients, focusing on UX design and digital marketing integration.</div>
+            </div>
+
+            <div class="exp-item reveal">
+                <div>
+                    <div class="exp-role">TechCamp 2026 — Intelligent and Autonomous Vehicles</div>
+                    <div class="exp-org">Politecnico di Milano, Campus Leonardo</div>
+                </div>
+                <div class="exp-period">June 2026</div>
+                <div class="exp-desc">Completed a 30-hour intensive on autonomous driving systems — perception, localization, planning, and control — combining university-level theory with hands-on MATLAB coding and lab testing on YAPE, Politecnico's micro-autonomous vehicle. <a href="TechCamp_2026_Intelligent_and_Autonomous_Driving.html" target="_blank">Read the recap ↗</a></div>
             </div>
 
             <div class="exp-item reveal">
